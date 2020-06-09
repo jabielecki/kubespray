@@ -162,8 +162,8 @@
 
 - name: Create hardcoded kubeadm token for joining nodes with 24h expiration (if defined)
   shell: >-
-    {{ bin_dir }}/kubeadm --kubeconfig /etc/kubernetes/admin.conf token delete {{ kubeadm_token }} || :;
-    {{ bin_dir }}/kubeadm --kubeconfig /etc/kubernetes/admin.conf token create {{ kubeadm_token }}
+    {{ bin_dir }}/kubeadm --kubeconfig /etc/kubernetes/admin.conf --config /etc/kubernetes/kubeadm-config.yaml token delete {{ kubeadm_token }} || :;
+    {{ bin_dir }}/kubeadm --kubeconfig /etc/kubernetes/admin.conf --config /etc/kubernetes/kubeadm-config.yaml token create {{ kubeadm_token }}
   when:
     - inventory_hostname == groups['kube-master']|first
     - kubeadm_token is defined
@@ -172,7 +172,7 @@
     - kubeadm_token
 
 - name: Create kubeadm token for joining nodes with 24h expiration (default)
-  command: "{{ bin_dir }}/kubeadm --kubeconfig /etc/kubernetes/admin.conf token create"
+  command: "{{ bin_dir }}/kubeadm --kubeconfig /etc/kubernetes/admin.conf --config /etc/kubernetes/kubeadm-config.yaml token create"
   register: temp_token
   retries: 5
   delay: 5
